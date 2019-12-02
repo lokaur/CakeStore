@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class CakesassormentserviceApplication
 
 fun main(args: Array<String>) {
-	runApplication<CakesassormentserviceApplication>(*args)
+    runApplication<CakesassormentserviceApplication>(*args)
 }

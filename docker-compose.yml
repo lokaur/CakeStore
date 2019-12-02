@@ -1,0 +1,17 @@
+version: "3"
+networks:
+  postgresnet:
+
+services:
+  postgresql:
+      image: postgres:11
+      hostname: cakes_postgresql
+      container_name: cakes_postgresql
+      restart: always
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+      ports:
+        - "5432:5432"
+      networks:
+        - postgresnet
