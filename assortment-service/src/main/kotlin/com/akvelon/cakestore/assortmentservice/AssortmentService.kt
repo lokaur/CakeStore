@@ -6,7 +6,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient
 
 @SpringBootApplication
 @EnableEurekaClient
-class AssortmentService
+open class AssortmentService
 fun main(args: Array<String>) {
     runApplication<AssortmentService>(*args)
 }
