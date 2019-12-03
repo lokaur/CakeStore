@@ -1,18 +1,41 @@
 version: "3"
 networks:
-  postgresnet:
+  cakestorenet:
 
 services:
+  assortment-service:
+    image: assortment-service
+    container_name: assortment-service
+    build: ./assortment-service/
+    restart: unless-stopped
+    ports:
+      - "6565:6565"
+    depends_on:
+      - postgresql
+      - eureka-server
+    networks:
+      - cakestorenet
+    links:
+      - postgresql
+  eureka-server:
+    image: eureka-server
+    container_name: eureka-server
+    build: ./eureka-server/
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    networks:
+      - cakestorenet
   postgresql:
-      image: postgres:latest
-      hostname: cakes_postgresql
-      container_name: cakes_postgresql
-      restart: unless-stopped
-      environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
-        - POSTGRES_DB=AssortmentService
-      ports:
-        - 5432:5432
-      networks:
-        - postgresnet
+    image: postgres:12
+    hostname: postgresql
+    container_name: postgresql
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=AssortmentService
+    ports:
+      - "5432:5432"
+    networks:
+      - cakestorenet
