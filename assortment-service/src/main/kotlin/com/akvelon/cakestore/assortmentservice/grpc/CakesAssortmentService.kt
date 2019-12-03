@@ -1,27 +1,61 @@
 package com.akvelon.cakestore.assortmentservice.grpc
 
+import com.akvelon.cakestore.assortmentservice.dal.controller.CakeController
+import com.akvelon.cakestore.assortmentservice.dal.model.Cake
+import com.akvelon.cakestore.assortmentservice.exceptions.EntityAlreadyExistsException
+import com.akvelon.cakestore.assortmentservice.exceptions.EntityRemoveException
 import io.grpc.stub.StreamObserver
 import org.baeldung.grpc.*
 import org.lognet.springboot.grpc.GRpcService
+import org.springframework.beans.factory.annotation.Autowired
 
 @GRpcService
-class CakesAssortmentService : CakesAssortmentServiceGrpc.CakesAssortmentServiceImplBase() {
-    override fun hello(request: CakesAssortmentRequest?, responseObserver: StreamObserver<CakesAssortmentResponse>?) {
-        println("Received: $request")
-        responseObserver?.onNext(
-                CakesAssortmentResponse
-                        .newBuilder()
-                        .setGreeting("Hello, ${request?.firstName} ${request?.lastName}")
-                        .build())
-        responseObserver?.onCompleted()
-    }
+class CakesAssortmentService(@Autowired val cakeController: CakeController)
+    : CakesAssortmentServiceGrpc.CakesAssortmentServiceImplBase() {
 
     override fun addCake(request: AddCakeRequest?, responseObserver: StreamObserver<AddCakeResponse>?) {
-        println("addCakeRequest: ${request?.name}")
-        responseObserver?.onCompleted()
+        try {
+            if (request == null || request.name.isEmpty()) {
+                responseObserver?.onNext(makeAddCakeResponse(AddCakeResponse.EnumAddCakeStatus.INVALID_PARAMS))
+            } else {
+                cakeController.addCake(Cake(0, request.name, request.price, request.cookingTime))
+                responseObserver?.onNext(makeAddCakeResponse(AddCakeResponse.EnumAddCakeStatus.OK))
+            }
+        } catch (e: EntityAlreadyExistsException) {
+            responseObserver?.onNext(makeAddCakeResponse(AddCakeResponse.EnumAddCakeStatus.CAKE_ALREADY_EXIST))
+        } catch (e: Exception) {
+            responseObserver?.onNext(makeAddCakeResponse(AddCakeResponse.EnumAddCakeStatus.UNKNOWN_ERROR))
+        } finally {
+            responseObserver?.onCompleted()
+        }
     }
 
+    private fun makeAddCakeResponse(status: AddCakeResponse.EnumAddCakeStatus): AddCakeResponse =
+            AddCakeResponse
+                    .newBuilder()
+                    .setStatus(status)
+                    .build()
+
     override fun removeCake(request: RemoveCakeRequest?, responseObserver: StreamObserver<RemoveCakeResponse>?) {
-        super.removeCake(request, responseObserver)
+        try {
+            if (request == null || request.name.isEmpty()) {
+                responseObserver?.onNext(makeRemoveCakeResponse(RemoveCakeResponse.EnumRemoveCakeStatus.INVALID_PARAMS))
+            } else {
+                cakeController.removeCakeByName(request.name)
+                responseObserver?.onNext(makeRemoveCakeResponse(RemoveCakeResponse.EnumRemoveCakeStatus.OK))
+            }
+        } catch (e: EntityRemoveException) {
+            responseObserver?.onNext(makeRemoveCakeResponse(RemoveCakeResponse.EnumRemoveCakeStatus.CAKE_NOT_FOUND))
+        } catch (e: Exception) {
+            responseObserver?.onNext(makeRemoveCakeResponse(RemoveCakeResponse.EnumRemoveCakeStatus.UNKNOWN_ERROR))
+        } finally {
+            responseObserver?.onCompleted()
+        }
     }
+
+    private fun makeRemoveCakeResponse(status: RemoveCakeResponse.EnumRemoveCakeStatus): RemoveCakeResponse =
+            RemoveCakeResponse
+                    .newBuilder()
+                    .setStatus(status)
+                    .build()
 }
