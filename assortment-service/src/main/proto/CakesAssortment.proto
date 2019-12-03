@@ -34,7 +34,26 @@ message RemoveCakeResponse {
     EnumRemoveCakeStatus status = 1;
 }
 
+message GetCakeRequest {
+    string name = 1;
+}
+
+message GetCakeResponse {
+    enum EnumGetCakeStatus {
+        OK = 0;
+        CAKE_NOT_FOUND = 1;
+        INVALID_PARAMS = 2;
+        UNKNOWN_ERROR = 3;
+    }
+
+    string name = 1;
+    int32 price = 2;
+    int32 cookingTime = 3;
+    EnumGetCakeStatus status = 4;
+}
+
 service CakesAssortmentService {
     rpc addCake (AddCakeRequest) returns (AddCakeResponse);
     rpc removeCake (RemoveCakeRequest) returns (RemoveCakeResponse);
+    rpc getCake (GetCakeRequest) returns (GetCakeResponse);
 }

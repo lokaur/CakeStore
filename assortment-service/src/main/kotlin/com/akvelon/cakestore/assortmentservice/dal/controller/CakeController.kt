@@ -4,6 +4,7 @@ import com.akvelon.cakestore.assortmentservice.dal.dao.CakeRepository
 import com.akvelon.cakestore.assortmentservice.dal.model.Cake
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityAlreadyExistsException
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityInsertException
+import com.akvelon.cakestore.assortmentservice.exceptions.EntityNotExist
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityRemoveException
 
 class CakeController(val cakeRepository: CakeRepository) {
@@ -28,4 +29,6 @@ class CakeController(val cakeRepository: CakeRepository) {
             throw EntityRemoveException()
         }
     }
+
+    fun getCakeByName(name: String): Cake? = cakeRepository.getCakeByName(name) ?: throw EntityNotExist()
 }

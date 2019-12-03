@@ -3,6 +3,7 @@ package com.akvelon.cakestore.assortmentservice.grpc
 import com.akvelon.cakestore.assortmentservice.dal.controller.CakeController
 import com.akvelon.cakestore.assortmentservice.dal.model.Cake
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityAlreadyExistsException
+import com.akvelon.cakestore.assortmentservice.exceptions.EntityNotExist
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityRemoveException
 import io.grpc.stub.StreamObserver
 import org.baeldung.grpc.*
@@ -55,6 +56,38 @@ class CakesAssortmentService(@Autowired val cakeController: CakeController)
 
     private fun makeRemoveCakeResponse(status: RemoveCakeResponse.EnumRemoveCakeStatus): RemoveCakeResponse =
             RemoveCakeResponse
+                    .newBuilder()
+                    .setStatus(status)
+                    .build()
+
+    override fun getCake(request: GetCakeRequest?, responseObserver: StreamObserver<GetCakeResponse>?) {
+        try {
+            if (request == null || request.name.isEmpty()) {
+                responseObserver?.onNext(makeGetCakeErrorResponse(GetCakeResponse.EnumGetCakeStatus.INVALID_PARAMS))
+            } else {
+                val cake = cakeController.getCakeByName(request.name)!!
+                responseObserver?.onNext(makeGetCakeSuccessResponse(cake))
+            }
+        } catch (e: EntityNotExist) {
+            responseObserver?.onNext(makeGetCakeErrorResponse(GetCakeResponse.EnumGetCakeStatus.CAKE_NOT_FOUND))
+        } catch (e: Exception) {
+            responseObserver?.onNext(makeGetCakeErrorResponse(GetCakeResponse.EnumGetCakeStatus.UNKNOWN_ERROR))
+        } finally {
+            responseObserver?.onCompleted()
+        }
+    }
+
+    private fun makeGetCakeSuccessResponse(cake: Cake): GetCakeResponse =
+            GetCakeResponse
+                    .newBuilder()
+                    .setStatus(GetCakeResponse.EnumGetCakeStatus.OK)
+                    .setName(cake.name)
+                    .setPrice(cake.price)
+                    .setCookingTime(cake.cookingTime)
+                    .build()
+
+    private fun makeGetCakeErrorResponse(status: GetCakeResponse.EnumGetCakeStatus): GetCakeResponse =
+            GetCakeResponse
                     .newBuilder()
                     .setStatus(status)
                     .build()
