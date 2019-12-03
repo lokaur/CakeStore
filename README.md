@@ -27,7 +27,7 @@ grpcc -i -p ./CakesAssortment.proto -a localhost:6565
 
 Or you can make a service discovery from **Eureka** (open http://localhost:8761) and replace **localhost:6565**
 
-###Example service call through grpcc
+### Example service call through grpcc
 ```bash
 var md = cm({Login: "admin", Password: "securepassword"})
 client.addCake({name: "Napoleon", price: 600, cookingTime: 240000}, md, printReply)
