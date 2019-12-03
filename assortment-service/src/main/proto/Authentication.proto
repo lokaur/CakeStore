@@ -1,0 +1,16 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package org.baeldung.grpc;
+
+message AuthenticationRequest {
+    string login = 1;
+    string password = 2;
+}
+
+message AuthenticationResponse {
+    string status = 1;
+}
+
+service AuthenticationService {
+    rpc authenticate(AuthenticationRequest) returns (AuthenticationResponse);
+}

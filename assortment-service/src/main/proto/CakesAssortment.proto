@@ -11,6 +11,37 @@ message CakesAssortmentResponse {
     string greeting = 1;
 }
 
+message AddCakeRequest {
+    string name = 1;
+    int32 price = 2;
+    int64 cookingTime = 3;
+}
+
+message AddCakeResponse {
+    enum EnumAddCakeStatus {
+        OK = 0;
+        CAKE_ALREADY_EXIST = 1;
+        INVALID_PARAMS = 2;
+    }
+
+    EnumAddCakeStatus status = 1;
+}
+
+message RemoveCakeRequest {
+    string name = 1;
+}
+
+message RemoveCakeResponse {
+    enum EnumRemoveCakeStatus {
+        OK = 0;
+        NOT_FOUND = 1;
+    }
+
+    EnumRemoveCakeStatus status = 1;
+}
+
 service CakesAssortmentService {
-    rpc hello(CakesAssortmentRequest) returns (CakesAssortmentResponse);
+    rpc addCake (AddCakeRequest) returns (AddCakeResponse);
+    rpc removeCake (RemoveCakeRequest) returns (RemoveCakeResponse);
+    rpc hello (CakesAssortmentRequest) returns (CakesAssortmentResponse);
 }

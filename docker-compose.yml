@@ -4,14 +4,15 @@ networks:
 
 services:
   postgresql:
-      image: postgres:11
+      image: postgres:latest
       hostname: cakes_postgresql
       container_name: cakes_postgresql
-      restart: always
+      restart: unless-stopped
       environment:
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=AssortmentService
       ports:
-        - "5432:5432"
+        - 5432:5432
       networks:
         - postgresnet

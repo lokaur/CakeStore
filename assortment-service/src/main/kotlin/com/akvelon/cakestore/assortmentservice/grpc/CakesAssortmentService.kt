@@ -1,9 +1,7 @@
 package com.akvelon.cakestore.assortmentservice.grpc
 
 import io.grpc.stub.StreamObserver
-import org.baeldung.grpc.CakesAssortmentRequest
-import org.baeldung.grpc.CakesAssortmentResponse
-import org.baeldung.grpc.CakesAssortmentServiceGrpc
+import org.baeldung.grpc.*
 import org.lognet.springboot.grpc.GRpcService
 
 @GRpcService
@@ -16,5 +14,14 @@ class CakesAssortmentService : CakesAssortmentServiceGrpc.CakesAssortmentService
                         .setGreeting("Hello, ${request?.firstName} ${request?.lastName}")
                         .build())
         responseObserver?.onCompleted()
+    }
+
+    override fun addCake(request: AddCakeRequest?, responseObserver: StreamObserver<AddCakeResponse>?) {
+        println("addCakeRequest: ${request?.name}")
+        responseObserver?.onCompleted()
+    }
+
+    override fun removeCake(request: RemoveCakeRequest?, responseObserver: StreamObserver<RemoveCakeResponse>?) {
+        super.removeCake(request, responseObserver)
     }
 }
