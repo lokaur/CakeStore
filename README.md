@@ -12,7 +12,7 @@ Microservice with private GRpc API:
 * GetCake(name)
 
 Every cake has name, price and cooking time. The list of cakes should be stored in the database.
-Make simple authorization for this service.
+Make simple authentication for this service.
 
 ### Cake Order Service (WIP)
 Microservice with public GRpc API:
