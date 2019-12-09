@@ -6,4 +6,8 @@ class OrderCakeController(val orderCakeRepository: OrderCakeRepository) {
     fun createOrder() {
 
     }
+
+    fun getCakeByName(name: String) {
+
+    }
 }
