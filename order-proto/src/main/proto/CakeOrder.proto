@@ -1,0 +1,22 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.akvelon.ordercakeproto;
+
+message OrderCakeRequest {
+    string cakeName = 1;
+}
+
+message OrderCakeResponse {
+    enum EnumOrderCakeStatus {
+        OK = 0;
+        CAKE_NOT_EXISTS = 1;
+        INVALID_PARAMS = 2;
+        UNKNOWN_ERROR = 3;
+    }
+
+    EnumOrderCakeStatus status = 1;
+}
+
+service OrderCakeService {
+    rpc OrderCake (OrderCakeRequest) returns (OrderCakeResponse);
+}

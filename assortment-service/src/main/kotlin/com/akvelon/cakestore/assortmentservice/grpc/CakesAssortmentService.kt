@@ -1,12 +1,12 @@
 package com.akvelon.cakestore.assortmentservice.grpc
 
+import com.akvelon.cakesassortmentproto.*
 import com.akvelon.cakestore.assortmentservice.dal.controller.CakeController
 import com.akvelon.cakestore.assortmentservice.dal.model.Cake
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityAlreadyExistsException
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityNotExist
 import com.akvelon.cakestore.assortmentservice.exceptions.EntityRemoveException
 import io.grpc.stub.StreamObserver
-import org.baeldung.grpc.*
 import org.lognet.springboot.grpc.GRpcService
 import org.springframework.beans.factory.annotation.Autowired
 
