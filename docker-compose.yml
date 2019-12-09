@@ -31,10 +31,11 @@ services:
     hostname: postgresql
     container_name: postgresql
     restart: unless-stopped
+    volumes:
+      - ./database/1-create_databases.sql:/docker-entrypoint-initdb.d/1-create_databases.sql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=AssortmentService
     ports:
       - "5432:5432"
     networks:

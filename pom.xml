@@ -7,6 +7,7 @@
     <modules>
         <module>eureka-server</module>
         <module>assortment-service</module>
+        <module>order-service</module>
     </modules>
 
     <parent>
