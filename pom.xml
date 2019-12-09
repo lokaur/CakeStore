@@ -8,7 +8,6 @@
         <module>eureka-server</module>
         <module>assortment-proto</module>
         <module>assortment-service</module>
-        <module>assortment-client</module>
         <module>order-proto</module>
         <module>order-service</module>
     </modules>
