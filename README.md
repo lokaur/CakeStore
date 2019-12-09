@@ -14,7 +14,7 @@ Training project that uses the following technologies:
 
 ### Running
 ```bash
-mvmw install
+mvmw package
 docker-compose up -d
 ```
 
