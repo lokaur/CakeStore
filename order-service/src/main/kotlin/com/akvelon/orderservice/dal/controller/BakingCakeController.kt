@@ -15,6 +15,22 @@ class BakingCakeController(private val orderCakeRepository: OrderCakeRepository,
 
     private val logger: Logger = LoggerFactory.getLogger(BakingCakeController::class.toString())
 
+    fun startAll() {
+        orderCakeRepository.resetActiveOrders()
+        val pendingOrders: Array<Int>? = orderCakeRepository.getAllPendingOrdersIds()
+
+        if (pendingOrders == null || pendingOrders.isEmpty()) {
+            logger.info("Pending orders not found")
+            return
+        }
+
+        logger.info("Found ${pendingOrders.size} pending orders. Starting baking..")
+
+        for (orderId: Int in pendingOrders) {
+            startBaking(orderId)
+        }
+    }
+
     fun startBaking(orderId: Int) {
         val order: Order? = orderCakeRepository.getOrderById(orderId)
 
@@ -23,9 +39,10 @@ class BakingCakeController(private val orderCakeRepository: OrderCakeRepository,
         }
 
         logger.info("Starting baking order ${order.id}")
-        setOrderStatus(order.id, EOrderStatus.IN_PROGRESS)
+
         assortmentServiceClient.getCakeById(order.cakeId) {
             if (it != null) {
+                setOrderStatus(order.id, EOrderStatus.IN_PROGRESS)
                 Timer("Baking ${order.id}", false).schedule(it.cookingTime.toLong()) {
                     setOrderStatus(order.id, EOrderStatus.DONE)
                 }

@@ -14,5 +14,6 @@ class StartupApplicationListener(val bakingCakeController: BakingCakeController)
 
     override fun onApplicationEvent(p0: ContextRefreshedEvent) {
         logger.info("Application started. Starting baking process..")
+        bakingCakeController.startAll()
     }
 }

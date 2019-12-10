@@ -15,6 +15,12 @@ interface OrderCakeRepository {
     @Select("SELECT * FROM public.\"Order\" WHERE \"Id\" = #{orderId}")
     fun getOrderById(orderId: Int): Order?
 
+    @Update("UPDATE public.\"Order\" SET \"StatusId\" = 1 WHERE \"StatusId\" = 2")
+    fun resetActiveOrders()
+
+    @Select("SELECT \"Id\" FROM public.\"Order\" WHERE \"StatusId\" = 1")
+    fun getAllPendingOrdersIds(): Array<Int>?
+
     @Update("UPDATE public.\"Order\" SET \"StatusId\"=#{statusId} WHERE \"Id\" = #{orderId}")
     fun setOrderStatus(orderId: Int, statusId: Int)
 }
