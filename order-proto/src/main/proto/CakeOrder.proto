@@ -19,6 +19,29 @@ message OrderCakeResponse {
     int32 cookingTime = 3;
 }
 
+message CheckOrderStatusRequest {
+    int32 orderId = 1;
+}
+
+message CheckOrderStatusResponse {
+    enum EnumOrderStatus {
+        NEW = 0;
+        IN_PROGRESS = 1;
+        DONE = 2;
+    }
+
+    enum EnumCheckOrderStatus {
+        OK = 0;
+        INVALID_PARAMS = 1;
+        ORDER_NOT_FOUND = 2;
+        UNKNOWN_ERROR = 3;
+    }
+
+    EnumCheckOrderStatus status = 1;
+    EnumOrderStatus orderStatus = 2;
+}
+
 service OrderCakeService {
     rpc OrderCake (OrderCakeRequest) returns (OrderCakeResponse);
+    rpc CheckOrderStatus (CheckOrderStatusRequest) returns (CheckOrderStatusResponse);
 }

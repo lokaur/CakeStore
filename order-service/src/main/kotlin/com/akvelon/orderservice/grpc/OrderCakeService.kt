@@ -1,9 +1,8 @@
 package com.akvelon.orderservice.grpc
 
-import com.akvelon.ordercakeproto.OrderCakeRequest
-import com.akvelon.ordercakeproto.OrderCakeResponse
-import com.akvelon.ordercakeproto.OrderCakeServiceGrpc
+import com.akvelon.ordercakeproto.*
 import com.akvelon.orderservice.dal.controller.OrderCakeController
+import com.akvelon.orderservice.dal.enum.EOrderStatus
 import com.akvelon.orderservice.exceptions.EntityNotFoundException
 import io.grpc.Context
 import io.grpc.stub.StreamObserver
@@ -57,5 +56,34 @@ class OrderCakeService(private val orderCakeController: OrderCakeController) : O
             OrderCakeResponse
                     .newBuilder()
                     .setStatus(status)
+                    .build()
+
+    override fun checkOrderStatus(request: CheckOrderStatusRequest?, responseObserver: StreamObserver<CheckOrderStatusResponse>?) {
+        try {
+            logger.info("CheckOrder: ${request?.orderId}")
+            if (request == null) {
+                responseObserver?.onNext(makeCheckOrderStatusErrorResponse(CheckOrderStatusResponse.EnumCheckOrderStatus.INVALID_PARAMS))
+            } else {
+                val orderStatus: EOrderStatus? = orderCakeController.getOrderStatus(request.orderId)
+                responseObserver?.onNext(makeCheckOrderStatusResponse(EOrderStatus.toEResponseOrderStatus(orderStatus!!)))
+            }
+        } catch (e: EntityNotFoundException) {
+            responseObserver?.onNext(makeCheckOrderStatusErrorResponse(CheckOrderStatusResponse.EnumCheckOrderStatus.ORDER_NOT_FOUND))
+        } catch (e: Exception) {
+            responseObserver?.onNext(makeCheckOrderStatusErrorResponse(CheckOrderStatusResponse.EnumCheckOrderStatus.UNKNOWN_ERROR))
+        } finally {
+            responseObserver?.onCompleted()
+        }
+    }
+
+    private fun makeCheckOrderStatusErrorResponse(status: CheckOrderStatusResponse.EnumCheckOrderStatus): CheckOrderStatusResponse =
+            CheckOrderStatusResponse.newBuilder()
+                    .setStatus(status)
+                    .build()
+
+    private fun makeCheckOrderStatusResponse(orderStatus: CheckOrderStatusResponse.EnumOrderStatus): CheckOrderStatusResponse =
+            CheckOrderStatusResponse.newBuilder()
+                    .setStatus(CheckOrderStatusResponse.EnumCheckOrderStatus.OK)
+                    .setOrderStatus(orderStatus)
                     .build()
 }

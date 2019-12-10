@@ -24,6 +24,9 @@ class OrderCakeController(private val orderCakeRepository: OrderCakeRepository, 
         }
     }
 
+    fun getOrderStatus(orderId: Int): EOrderStatus? =
+            EOrderStatus.fromInt(orderCakeRepository.getOrderStatus(orderId) ?: throw EntityNotFoundException())
+
     private fun lookupCake(name: String, callback: (cake: GetCakeResponse?) -> Unit) {
         assortmentServiceClient.getCakeByName(name) {
             callback(it)
