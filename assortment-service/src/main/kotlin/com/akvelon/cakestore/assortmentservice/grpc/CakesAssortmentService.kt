@@ -80,6 +80,7 @@ class CakesAssortmentService(@Autowired val cakeController: CakeController)
     private fun makeGetCakeSuccessResponse(cake: Cake): GetCakeResponse =
             GetCakeResponse
                     .newBuilder()
+                    .setId(cake.id)
                     .setStatus(GetCakeResponse.EnumGetCakeStatus.OK)
                     .setName(cake.name)
                     .setPrice(cake.price)

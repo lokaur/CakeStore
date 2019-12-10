@@ -46,10 +46,11 @@ message GetCakeResponse {
         UNKNOWN_ERROR = 3;
     }
 
-    string name = 1;
-    int32 price = 2;
-    int32 cookingTime = 3;
-    EnumGetCakeStatus status = 4;
+    int32 id = 1;
+    string name = 2;
+    int32 price = 3;
+    int32 cookingTime = 4;
+    EnumGetCakeStatus status = 5;
 }
 
 service CakesAssortmentService {

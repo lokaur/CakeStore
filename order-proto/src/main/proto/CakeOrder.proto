@@ -15,6 +15,8 @@ message OrderCakeResponse {
     }
 
     EnumOrderCakeStatus status = 1;
+    int32 orderId = 2;
+    int32 cookingTime = 3;
 }
 
 service OrderCakeService {
