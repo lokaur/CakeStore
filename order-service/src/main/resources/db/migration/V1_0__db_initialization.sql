@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS public."OrderStatus"
 (
     "Id" integer NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "Name" character(20) COLLATE pg_catalog."default" NOT NULL,
+    "Name" varchar(20) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "OrderStatus_pkey" PRIMARY KEY ("Id")
 )
 WITH (

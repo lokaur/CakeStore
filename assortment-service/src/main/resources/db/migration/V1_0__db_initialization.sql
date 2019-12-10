@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS public."User"
 (
     "Id" int NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "Name" character(50) NOT NULL,
-    "Password" character(100) NOT NULL,
+    "Name" varchar(50) NOT NULL,
+    "Password" varchar(100) NOT NULL,
     PRIMARY KEY ("Id")
 )
 WITH (
@@ -17,7 +17,7 @@ INSERT INTO public."User"("Name", "Password") VALUES('admin', 'securepassword') 
 CREATE TABLE IF NOT EXISTS public."Cake"
 (
     "Id" int NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "Name" character(50) NOT NULL,
+    "Name" varchar(50) NOT NULL,
     "Price" int NOT NULL,
     "CookingTime" int NOT NULL,
     PRIMARY KEY ("Id")
