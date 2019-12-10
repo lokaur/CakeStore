@@ -9,7 +9,7 @@ import org.springframework.core.annotation.Order
 @Order(20)
 class AuthenticationInterceptor(private val userRepository: UserRepository) : ServerInterceptor {
     override fun <ReqT : Any?, RespT : Any?> interceptCall(call: ServerCall<ReqT, RespT>?, headers: Metadata?, next: ServerCallHandler<ReqT, RespT>?): ServerCall.Listener<ReqT> {
-        val userName = headers?.get(Metadata.Key.of("Login", Metadata.ASCII_STRING_MARSHALLER)) ?: ""
+        /*val userName = headers?.get(Metadata.Key.of("Login", Metadata.ASCII_STRING_MARSHALLER)) ?: ""
         val password = headers?.get(Metadata.Key.of("Password", Metadata.ASCII_STRING_MARSHALLER)) ?: ""
 
         // Stub authorization
@@ -22,7 +22,7 @@ class AuthenticationInterceptor(private val userRepository: UserRepository) : Se
 
         if (password != user.password) {
             throw Status.UNAUTHENTICATED.withDescription("Wrong password").asException()
-        }
+        }*/
 
         return next!!.startCall(call, headers)
     }
