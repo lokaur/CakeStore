@@ -12,7 +12,6 @@ Microservice with private GRpc API:
 * GetCake(name)
 
 Every cake has name, price and cooking time. The list of cakes should be stored in the database.
-Make simple authentication for this service.
 
 ### Cake Order Service
 Microservice with public GRpc API:
@@ -26,7 +25,7 @@ Cake baking is performed in the background. Each service has its own database.
 
 On application start, the baking process for new and unfinished orders restarts.
 
-## Technologies
+### Technologies
 
 * Kotlin
 * Spring Boot
@@ -37,6 +36,10 @@ On application start, the baking process for new and unfinished orders restarts.
 * PostgreSQL
 * Docker
 * Docker Compose
+
+### Architecture Diagram
+
+![Mobile version](CakeStore_diagram.png)
 
 ### Run
 ```bash
