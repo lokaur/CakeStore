@@ -1,5 +1,6 @@
 package com.akvelon.orderservice.dal.dao
 
+import com.akvelon.orderservice.dal.model.Order
 import org.apache.ibatis.annotations.*
 
 @Mapper
@@ -11,6 +12,9 @@ interface OrderCakeRepository {
     @Select("SELECT \"StatusId\" FROM public.\"Order\" WHERE \"Id\" = #{orderId}")
     fun getOrderStatus(orderId: Int): Int?
 
+    @Select("SELECT * FROM public.\"Order\" WHERE \"Id\" = #{orderId}")
+    fun getOrderById(orderId: Int): Order?
+
     @Update("UPDATE public.\"Order\" SET \"StatusId\"=#{statusId} WHERE \"Id\" = #{orderId}")
-    fun updateOrderStatus(orderId: Int, statusId: Int)
+    fun setOrderStatus(orderId: Int, statusId: Int)
 }

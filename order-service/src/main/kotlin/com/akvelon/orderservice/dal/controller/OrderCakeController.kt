@@ -3,14 +3,19 @@ package com.akvelon.orderservice.dal.controller
 import com.akvelon.cakesassortmentproto.GetCakeResponse
 import com.akvelon.orderservice.dal.dao.OrderCakeRepository
 import com.akvelon.orderservice.dal.enum.EOrderStatus
-import com.akvelon.orderservice.exceptions.EntityNotFoundException
+import com.akvelon.orderservice.exception.EntityNotFoundException
 import com.akvelon.orderservice.grpc.AssortmentServiceClient
+import io.grpc.Context
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class OrderCakeController(private val orderCakeRepository: OrderCakeRepository, private val assortmentServiceClient: AssortmentServiceClient) {
 
     private val logger: Logger = LoggerFactory.getLogger(OrderCakeController::class.toString())
+
+    private fun callWithContext(func: () -> Unit) {
+        Context.current().fork().call(func)
+    }
 
     fun createOrder(cakeName: String, callback: (orderId: Int, cookingTime: Int) -> Unit) {
         lookupCake(cakeName) {
@@ -28,8 +33,10 @@ class OrderCakeController(private val orderCakeRepository: OrderCakeRepository, 
             EOrderStatus.fromInt(orderCakeRepository.getOrderStatus(orderId) ?: throw EntityNotFoundException())
 
     private fun lookupCake(name: String, callback: (cake: GetCakeResponse?) -> Unit) {
-        assortmentServiceClient.getCakeByName(name) {
-            callback(it)
+        callWithContext {
+            assortmentServiceClient.getCakeByName(name) {
+                callback(it)
+            }
         }
     }
 }

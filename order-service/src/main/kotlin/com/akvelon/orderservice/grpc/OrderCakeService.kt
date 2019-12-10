@@ -1,23 +1,19 @@
 package com.akvelon.orderservice.grpc
 
 import com.akvelon.ordercakeproto.*
+import com.akvelon.orderservice.dal.controller.BakingCakeController
 import com.akvelon.orderservice.dal.controller.OrderCakeController
 import com.akvelon.orderservice.dal.enum.EOrderStatus
-import com.akvelon.orderservice.exceptions.EntityNotFoundException
-import io.grpc.Context
+import com.akvelon.orderservice.exception.EntityNotFoundException
 import io.grpc.stub.StreamObserver
 import org.lognet.springboot.grpc.GRpcService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 @GRpcService
-class OrderCakeService(private val orderCakeController: OrderCakeController) : OrderCakeServiceGrpc.OrderCakeServiceImplBase() {
+class OrderCakeService(private val orderCakeController: OrderCakeController, private val bakingCakeController: BakingCakeController) : OrderCakeServiceGrpc.OrderCakeServiceImplBase() {
 
     private val logger: Logger = LoggerFactory.getLogger(OrderCakeService::class.toString())
-
-    private fun callWithContext(func: () -> Unit) {
-        Context.current().fork().call(func)
-    }
 
     override fun orderCake(request: OrderCakeRequest?, responseObserver: StreamObserver<OrderCakeResponse>?) {
         try {
@@ -26,11 +22,10 @@ class OrderCakeService(private val orderCakeController: OrderCakeController) : O
             if (request == null || request.cakeName.isEmpty()) {
                 responseObserver?.onNext(makeOrderCakeErrorResponse(OrderCakeResponse.EnumOrderCakeStatus.INVALID_PARAMS))
             } else {
-                callWithContext {
-                    orderCakeController.createOrder(request.cakeName) { id, cookingTime ->
-                        responseObserver?.onNext(makeOrderCakeResponse(id, cookingTime))
-                        responseObserver?.onCompleted()
-                    }
+                orderCakeController.createOrder(request.cakeName) { id, cookingTime ->
+                    bakingCakeController.startBaking(id)
+                    responseObserver?.onNext(makeOrderCakeResponse(id, cookingTime))
+                    responseObserver?.onCompleted()
                 }
             }
         } catch (e: EntityNotFoundException) {

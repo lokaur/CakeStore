@@ -31,4 +31,6 @@ class CakeController(val cakeRepository: CakeRepository) {
     }
 
     fun getCakeByName(name: String): Cake? = cakeRepository.getCakeByName(name) ?: throw EntityNotExist()
+
+    fun getCakeById(id: Int): Cake? = cakeRepository.getCakeById(id) ?: throw EntityNotExist()
 }

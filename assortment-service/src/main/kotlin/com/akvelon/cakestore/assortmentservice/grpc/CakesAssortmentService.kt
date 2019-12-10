@@ -62,10 +62,15 @@ class CakesAssortmentService(@Autowired val cakeController: CakeController)
 
     override fun getCake(request: GetCakeRequest?, responseObserver: StreamObserver<GetCakeResponse>?) {
         try {
-            if (request == null || request.name.isEmpty()) {
+            if (request == null || (request.name.isEmpty()) && request.id == 0) {
                 responseObserver?.onNext(makeGetCakeErrorResponse(GetCakeResponse.EnumGetCakeStatus.INVALID_PARAMS))
             } else {
-                val cake = cakeController.getCakeByName(request.name)!!
+                val cake: Cake = if (request.id != 0) {
+                    cakeController.getCakeById(request.id)!!
+                } else {
+                    cakeController.getCakeByName(request.name)!!
+                }
+
                 responseObserver?.onNext(makeGetCakeSuccessResponse(cake))
             }
         } catch (e: EntityNotExist) {

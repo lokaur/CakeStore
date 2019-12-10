@@ -21,13 +21,17 @@ class AssortmentServiceClient(@Autowired val client: EurekaClient) {
 
     private val logger: Logger = LoggerFactory.getLogger(AssortmentServiceClient::class.toString())
 
-    fun getCakeByName(name: String, callback: (GetCakeResponse?) -> Unit) {
+    fun getCakeByName(name: String, callback: (GetCakeResponse?) -> Unit) = getCake(GetCakeRequest.newBuilder().setName(name).build(), callback)
+
+    fun getCakeById(id: Int, callback: (GetCakeResponse?) -> Unit) = getCake(GetCakeRequest.newBuilder().setId(id).build(), callback)
+
+    private fun getCake(getCakeRequest: GetCakeRequest, callback: (GetCakeResponse?) -> Unit) {
         val instanceInfo: InstanceInfo = client.getNextServerFromEureka("CakesAssortmentService", false)
         val channel: ManagedChannel = ManagedChannelBuilder.forAddress(instanceInfo.ipAddr, instanceInfo.port)
                 .usePlaintext()
                 .build()
 
-        val response = CakesAssortmentServiceGrpc.newFutureStub(channel).getCake(GetCakeRequest.newBuilder().setName(name).build())
+        val response = CakesAssortmentServiceGrpc.newFutureStub(channel).getCake(getCakeRequest)
 
         Futures.addCallback(
                 response,
