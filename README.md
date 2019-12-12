@@ -1,7 +1,8 @@
 # Cakes Store
+Order cakes service for the cakes store
 
 ## Description
-Order cakes service for the candy store.
+This project is made for educational purposes. Main goal: to learn **Spring Boot** and **Kotlin**
 
 Create two microservices:
 ### Cake Assortment Service
